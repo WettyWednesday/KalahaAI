@@ -23,12 +23,12 @@ public class BoardLogic {
         player1Turn = true;
     }
 
-    public boolean makeMove(int pitIndex) {
-        if (!isValidMove(pitIndex)) return false;
+public boolean makeMove(int pitIndex) {
+    if (!isValidMove(pitIndex)) return false;
 
-        int stones = board[pitIndex];
-        board[pitIndex] = 0;
-        int currentIndex = pitIndex;
+    int stones = board[pitIndex];
+    board[pitIndex] = 0;
+    int currentIndex = pitIndex;
 
         while (stones > 0) {
             currentIndex = (currentIndex + 1) % TOTAL_PITS;
@@ -39,11 +39,11 @@ public class BoardLogic {
             stones--;
         }
 
-        checkCapture(currentIndex);
-        switchTurn(currentIndex);
+    checkCapture(currentIndex);
+    switchTurn(currentIndex);
 
-        return true;
-    }
+    return true;
+}
 
     private boolean isValidMove(int pitIndex) {
         if (player1Turn && (pitIndex >= PITS_PER_SIDE || board[pitIndex] == 0)) return false;

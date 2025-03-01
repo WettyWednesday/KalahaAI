@@ -40,17 +40,19 @@ public class BoardUI {
         int numPits = 6;
         float pitRadius = 30;
         float spacing = (boardRec.width() - (numPits * pitRadius * 2)) / (numPits - 1);
-        float startX = boardRec.x() + pitRadius;
+        float startXtop = boardRec.x()+boardRec.width() - pitRadius;
+        float startXbottom = boardRec.x() + pitRadius;
         float topRowY = boardRec.y() + pitRadius;
         float bottomRowY = boardRec.y() + boardRec.height() - pitRadius;
 
         for (int i = 0; i < numPits; i++) {
-            float x = startX + i * (pitRadius * 2 + spacing);
-            DrawCircle((int) x, (int) topRowY, pitRadius, DARKGRAY);
-            DrawText(String.valueOf(boardState[i]), (int) x - 5, (int) topRowY - 5, 20, WHITE);
+            float x1 = startXtop - i * (spacing + pitRadius * 2);
+            float x2 = startXbottom + i * (spacing + pitRadius * 2);
+            DrawCircle((int) x1, (int) topRowY, pitRadius, DARKGRAY);
+            DrawText(String.valueOf(boardState[i]), (int) x1 - 5, (int) topRowY - 5, 20, WHITE);
 
-            DrawCircle((int) x, (int) bottomRowY, pitRadius, DARKGRAY);
-            DrawText(String.valueOf(boardState[i + numPits + 1]), (int) x - 5, (int) bottomRowY - 5, 20, WHITE);
+            DrawCircle((int) x2, (int) bottomRowY, pitRadius, DARKGRAY);
+            DrawText(String.valueOf(boardState[i + numPits + 1]), (int) x2 - 5, (int) bottomRowY - 5, 20, WHITE);
         }
 
         float storeWidth = 40;
@@ -75,14 +77,20 @@ public class BoardUI {
     }
 
     private int detectPitClicked(int mouseX, int mouseY) {
-        float startX = 130;
+        float startX = 670;
         float pitSpacing = 100;
         float topRowY = 110;
         float bottomRowY = 250;
         float pitRadius = 30;
 
         for (int i = 0; i < 6; i++) {
-            float x = startX + i * pitSpacing;
+            float x;
+            if(mouseY<topRowY+pitRadius) {
+                x = startX - i * pitSpacing;
+            }
+            else {
+                x = 130 + i * pitSpacing;
+            }
             if ((mouseX > x - pitRadius && mouseX < x + pitRadius) && (mouseY > topRowY - pitRadius && mouseY < topRowY + pitRadius)) {
                 return i;
             }
