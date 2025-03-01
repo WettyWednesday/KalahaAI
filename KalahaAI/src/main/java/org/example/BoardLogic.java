@@ -7,7 +7,7 @@ public class BoardLogic {
     public static final int PLAYER_2_STORE = TOTAL_PITS - 1;
 
     private int[] board;
-    private boolean player1Turn;
+    private boolean playersTurn;
 
     public BoardLogic() {
         resetBoard();
@@ -20,7 +20,7 @@ public class BoardLogic {
                 board[i] = 4;
             }
         }
-        player1Turn = true;
+        playersTurn = false;
     }
 
 public boolean makeMove(int pitIndex) {
@@ -32,7 +32,7 @@ public boolean makeMove(int pitIndex) {
 
         while (stones > 0) {
             currentIndex = (currentIndex + 1) % TOTAL_PITS;
-            if ((player1Turn && currentIndex == PLAYER_2_STORE) || (!player1Turn && currentIndex == PLAYER_1_STORE)) {
+            if ((playersTurn && currentIndex == PLAYER_2_STORE) || (!playersTurn && currentIndex == PLAYER_1_STORE)) {
                 continue;
             }
             board[currentIndex]++;
@@ -46,18 +46,18 @@ public boolean makeMove(int pitIndex) {
 }
 
     private boolean isValidMove(int pitIndex) {
-        if (player1Turn && (pitIndex >= PITS_PER_SIDE || board[pitIndex] == 0)) return false;
-        if (!player1Turn && (pitIndex < PITS_PER_SIDE || pitIndex == PLAYER_1_STORE || board[pitIndex] == 0)) return false;
+        if (playersTurn && (pitIndex >= PITS_PER_SIDE || board[pitIndex] == 0)) return false;
+        if (!playersTurn && (pitIndex < PITS_PER_SIDE || pitIndex == PLAYER_1_STORE || board[pitIndex] == 0)) return false;
         return true;
     }
 
     private void checkCapture(int lastPit) {
-        if (player1Turn && lastPit < PITS_PER_SIDE && board[lastPit] == 1) {
+        if (playersTurn && lastPit < PITS_PER_SIDE && board[lastPit] == 1) {
             int oppositePit = TOTAL_PITS - 2 - lastPit;
             board[PLAYER_1_STORE] += board[oppositePit] + 1;
             board[oppositePit] = 0;
             board[lastPit] = 0;
-        } else if (!player1Turn && lastPit >= PITS_PER_SIDE + 1 && lastPit < PLAYER_2_STORE && board[lastPit] == 1) {
+        } else if (!playersTurn && lastPit >= PITS_PER_SIDE + 1 && lastPit < PLAYER_2_STORE && board[lastPit] == 1) {
             int oppositePit = TOTAL_PITS - 2 - lastPit;
             board[PLAYER_2_STORE] += board[oppositePit] + 1;
             board[oppositePit] = 0;
@@ -66,10 +66,10 @@ public boolean makeMove(int pitIndex) {
     }
 
     private void switchTurn(int lastPit) {
-        if ((player1Turn && lastPit == PLAYER_1_STORE) || (!player1Turn && lastPit == PLAYER_2_STORE)) {
+        if ((playersTurn && lastPit == PLAYER_1_STORE) || (!playersTurn && lastPit == PLAYER_2_STORE)) {
             return;
         }
-        player1Turn = !player1Turn;
+        playersTurn = !playersTurn;
     }
 
     public boolean isGameOver() {
@@ -85,7 +85,7 @@ public boolean makeMove(int pitIndex) {
         return board;
     }
 
-    public boolean isPlayer1Turn() {
-        return player1Turn;
+    public boolean isPlayersTurn() {
+        return playersTurn;
     }
 }
