@@ -77,25 +77,25 @@ public class BoardUI {
     }
 
     private int detectPitClicked(int mouseX, int mouseY) {
-        float startX = 670;
-        float pitSpacing = 100;
+        float pitRadius = 30;
+        float spacing = 108;
         float topRowY = 110;
         float bottomRowY = 250;
-        float pitRadius = 30;
 
         for (int i = 0; i < 6; i++) {
-            float x;
-            if(mouseY<topRowY+pitRadius) {
-                x = startX - i * pitSpacing;
+            float topX = 670 - i * spacing;
+            float bottomX = 130 + i * spacing;
+
+            if (mouseY > topRowY - pitRadius && mouseY < topRowY + pitRadius) {
+                if (mouseX > topX - pitRadius && mouseX < topX + pitRadius) {
+                    return i;
+                }
             }
-            else {
-                x = 130 + i * pitSpacing;
-            }
-            if ((mouseX > x - pitRadius && mouseX < x + pitRadius) && (mouseY > topRowY - pitRadius && mouseY < topRowY + pitRadius)) {
-                return i;
-            }
-            if ((mouseX > x - pitRadius && mouseX < x + pitRadius) && (mouseY > bottomRowY - pitRadius && mouseY < bottomRowY + pitRadius)) {
-                return i + 7;
+
+            if (mouseY > bottomRowY - pitRadius && mouseY < bottomRowY + pitRadius) {
+                if (mouseX > bottomX - pitRadius && mouseX < bottomX + pitRadius) {
+                    return i + 7;
+                }
             }
         }
         return -1;
