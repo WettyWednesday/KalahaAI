@@ -52,12 +52,12 @@ public boolean makeMove(int pitIndex) {
     }
 
     private void checkCapture(int lastPit) {
-        if (AITurn && lastPit < PITS_PER_SIDE && board[lastPit] == 1) {
+        if (AITurn && lastPit < PLAYER_1_STORE && board[lastPit] == 1) {
             int oppositePit = TOTAL_PITS - 2 - lastPit;
             board[PLAYER_1_STORE] += board[oppositePit] + 1;
             board[oppositePit] = 0;
             board[lastPit] = 0;
-        } else if (!AITurn && lastPit >= PITS_PER_SIDE + 1 && lastPit < PLAYER_2_STORE && board[lastPit] == 1) {
+        } else if (!AITurn && lastPit > PLAYER_1_STORE && lastPit < PLAYER_2_STORE && board[lastPit] == 1) {
             int oppositePit = TOTAL_PITS - 2 - lastPit;
             board[PLAYER_2_STORE] += board[oppositePit] + 1;
             board[oppositePit] = 0;
@@ -73,12 +73,14 @@ public boolean makeMove(int pitIndex) {
     }
 
     public boolean isGameOver() {
-        boolean player1Empty = true, player2Empty = true;
+        boolean player1Empty = true, player2Empty = true, player1StoreOverHalf = true, player2StoreOverHalf = true;
         for (int i = 0; i < PITS_PER_SIDE; i++) {
             if (board[i] > 0) player1Empty = false;
             if (board[i + PITS_PER_SIDE + 1] > 0) player2Empty = false;
+            if(board[PLAYER_1_STORE] <= 24) player1StoreOverHalf = false;
+            if(board[PLAYER_2_STORE] <= 24) player2StoreOverHalf = false;
         }
-        return player1Empty || player2Empty;
+        return player1Empty || player2Empty || player1StoreOverHalf || player2StoreOverHalf;
     }
 
     public int[] getBoard() {
