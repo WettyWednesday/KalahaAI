@@ -36,7 +36,7 @@ public class BoardUI {
         Rectangle boardRec = new Rectangle().x(100).y(80).width(600).height(200);
         DrawRectangleRounded(boardRec, 0.2f, 6, BROWN);
 
-        String turnText = boardLogic.isAITurn() ? "Player 2's turn" : "Player 1's turn";
+        String turnText = boardLogic.isAITurn() ? "AI's turn" : "Players turn";
         DrawText(turnText, SCREEN_WIDTH / 2 - MeasureText(turnText, 20) / 2, 20, 20, BLACK);
 
         int[] boardState = boardLogic.getBoard();
