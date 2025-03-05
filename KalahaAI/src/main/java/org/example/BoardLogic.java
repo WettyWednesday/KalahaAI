@@ -8,6 +8,8 @@ public class BoardLogic {
 
     private int[] board;
     private boolean AITurn;
+    private MinimaxAgent agent = new MinimaxAgent(this, 5);
+
 
     public BoardLogic() {
         resetBoard();
@@ -41,6 +43,13 @@ public boolean makeMove(int pitIndex) {
 
     checkCapture(currentIndex);
     switchTurn(currentIndex);
+    if(AITurn){
+    try {
+        Thread.sleep(2000);
+        makeMove(agent.minimax());
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }}
 
     return true;
 }

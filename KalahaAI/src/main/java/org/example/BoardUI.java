@@ -71,14 +71,7 @@ public class BoardUI {
         DrawRectangleRounded(new Rectangle().x(boardRec.x() + boardRec.width() + 10).y(boardRec.y() + 10).width(storeWidth).height(storeHeight), 0.3f, 6, DARKBROWN);
         DrawText(String.valueOf(boardState[BoardLogic.PLAYER_STORE]), (int) (boardRec.x() + boardRec.width() + 10), (int) (boardRec.y() + storeHeight / 2), 20, WHITE);
 
-        if(boardLogic.isAITurn()){
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            boardLogic.makeMove(agent.minimax(boardLogic, 5));
-        }
+
     }
 
     private void handleInput() {

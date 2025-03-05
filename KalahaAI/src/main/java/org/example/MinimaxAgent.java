@@ -10,7 +10,7 @@ public class MinimaxAgent {
         this.depth = depth;
     }
 
-    public  int minimax(BoardLogic board, int depth){
+    public  int minimax(){
         BoardLogic tempBoard = board.copy();
         int[] scoremoves = new int[6];
         for (int i=0; i<6; i++){
