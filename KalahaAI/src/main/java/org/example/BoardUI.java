@@ -36,8 +36,11 @@ public class BoardUI {
         Rectangle boardRec = new Rectangle().x(100).y(80).width(600).height(200);
         DrawRectangleRounded(boardRec, 0.2f, 6, BROWN);
 
-        String turnText = boardLogic.isAITurn() ? "AI's turn" : "Players turn";
-        DrawText(turnText, SCREEN_WIDTH / 2 - MeasureText(turnText, 20) / 2, 20, 20, BLACK);
+        if(boardLogic.isAITurn()){
+            DrawText("AI's Turn", SCREEN_WIDTH / 2 - MeasureText("AI's Turn", 20) / 2, 20, 20, BLACK);
+        } else {
+            DrawText("Player's Turn", SCREEN_WIDTH / 2 - MeasureText("Player's Turn", 20) / 2, GetScreenHeight()-40, 20, BLACK);
+        }
 
         int[] boardState = boardLogic.getBoard();
         int numPits = 6;
@@ -51,10 +54,10 @@ public class BoardUI {
         for (int i = 0; i < numPits; i++) {
             float x1 = startXtop - i * (spacing + pitRadius * 2);
             float x2 = startXbottom + i * (spacing + pitRadius * 2);
-            DrawCircle((int) x1, (int) topRowY, pitRadius, DARKGRAY);
+            DrawCircle((int) x1, (int) topRowY, pitRadius, RED);
             DrawText(String.valueOf(boardState[i]), (int) x1 - 5, (int) topRowY - 5, 20, WHITE);
 
-            DrawCircle((int) x2, (int) bottomRowY, pitRadius, DARKGRAY);
+            DrawCircle((int) x2, (int) bottomRowY, pitRadius, GREEN);
             DrawText(String.valueOf(boardState[i + numPits + 1]), (int) x2 - 5, (int) bottomRowY - 5, 20, WHITE);
         }
 
