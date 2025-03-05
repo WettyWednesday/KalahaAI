@@ -7,6 +7,7 @@ public class BoardUI {
     private static final int SCREEN_HEIGHT = 400;
 
     private BoardLogic boardLogic;
+    private MinimaxAgent agent= new MinimaxAgent(boardLogic, 5);
 
     public BoardUI(BoardLogic logic) {
         this.boardLogic = logic;
@@ -65,10 +66,19 @@ public class BoardUI {
         float storeHeight = boardRec.height() - 20;
 
         DrawRectangleRounded(new Rectangle().x(boardRec.x() - storeWidth - 10).y(boardRec.y() + 10).width(storeWidth).height(storeHeight), 0.3f, 6, DARKBROWN);
-        DrawText(String.valueOf(boardState[BoardLogic.PLAYER_1_STORE]), (int) (boardRec.x() - storeWidth), (int) (boardRec.y() + storeHeight / 2), 20, WHITE);
+        DrawText(String.valueOf(boardState[BoardLogic.AI_STORE]), (int) (boardRec.x() - storeWidth), (int) (boardRec.y() + storeHeight / 2), 20, WHITE);
 
         DrawRectangleRounded(new Rectangle().x(boardRec.x() + boardRec.width() + 10).y(boardRec.y() + 10).width(storeWidth).height(storeHeight), 0.3f, 6, DARKBROWN);
-        DrawText(String.valueOf(boardState[BoardLogic.PLAYER_2_STORE]), (int) (boardRec.x() + boardRec.width() + 10), (int) (boardRec.y() + storeHeight / 2), 20, WHITE);
+        DrawText(String.valueOf(boardState[BoardLogic.PLAYER_STORE]), (int) (boardRec.x() + boardRec.width() + 10), (int) (boardRec.y() + storeHeight / 2), 20, WHITE);
+
+        if(boardLogic.isAITurn()){
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            boardLogic.makeMove(agent.minimax(boardLogic, 5));
+        }
     }
 
     private void handleInput() {
@@ -114,4 +124,5 @@ public class BoardUI {
         EndDrawing();
         WaitTime(2);
     }
+
 }
