@@ -43,20 +43,22 @@ public boolean makeMove(int pitIndex) {
 
     checkCapture(currentIndex);
     switchTurn(currentIndex);
+
     if(AITurn){
-    try {
-        Thread.sleep(2000);
-        makeMove(agent.minimax());
-    } catch (InterruptedException e) {
-        e.printStackTrace();
-    }}
+        new Thread(() -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            makeMove(agent.minimax());
+        }).start();
+     }
 
     return true;
 }
 
-public void undoMove(int stones) {
 
-}
 
     private boolean isValidMove(int pitIndex) {
         if (AITurn && (pitIndex >= PITS_PER_SIDE || board[pitIndex] == 0)) return false;
