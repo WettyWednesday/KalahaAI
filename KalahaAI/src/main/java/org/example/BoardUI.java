@@ -113,6 +113,7 @@ public class BoardUI {
         BeginDrawing();
         ClearBackground(RAYWHITE);
         DrawText("Game Over!", SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT / 2 - 20, 30, RED);
+        DrawText("Winner is: "+boardLogic.getWinner()+"!", SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT / 2 + 20, 30, RED);
         EndDrawing();
         WaitTime(2);
     }

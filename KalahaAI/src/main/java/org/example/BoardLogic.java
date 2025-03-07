@@ -109,14 +109,25 @@ public class BoardLogic {
     }
 
     public boolean isGameOver() {
-        boolean player1Empty = true, player2Empty = true, player1StoreOverHalf = true, player2StoreOverHalf = true;
+        boolean aiEmpty = true, playerEmpty = true, player1StoreOverHalf = true, player2StoreOverHalf = true;
         for (int i = 0; i < PITS_PER_SIDE; i++) {
-            if (board[i] > 0) player1Empty = false;
-            if (board[i + PITS_PER_SIDE + 1] > 0) player2Empty = false;
+            if (board[i] > 0) aiEmpty = false;
+            if (board[i + PITS_PER_SIDE + 1] > 0) playerEmpty = false;
             if(board[AI_STORE] <= 24) player1StoreOverHalf = false;
             if(board[PLAYER_STORE] <= 24) player2StoreOverHalf = false;
         }
-        return player1Empty || player2Empty || player1StoreOverHalf || player2StoreOverHalf;
+        if(aiEmpty){
+            for(int i = 7; i<TOTAL_PITS;i++){
+                board[PLAYER_STORE] += board[i];
+                board[i] = 0;
+            }
+        }else if(playerEmpty){
+            for(int i = 0; i<PITS_PER_SIDE;i++){
+                board[AI_STORE] += board[i];
+                board[i] = 0;
+            }
+        }
+        return aiEmpty || playerEmpty || player1StoreOverHalf || player2StoreOverHalf;
     }
 
     public int[] getBoard() {
@@ -132,5 +143,15 @@ public class BoardLogic {
         copy.board = board.clone();
         copy.AITurn = AITurn;
         return copy;
+    }
+
+    public String getWinner(){
+        if(board[AI_STORE]>board[PLAYER_STORE]){
+            return "AI";
+        }else if(board[AI_STORE]<board[PLAYER_STORE]){
+            return "Player";
+        }else{
+            return "Tie";
+        }
     }
 }
