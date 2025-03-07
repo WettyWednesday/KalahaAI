@@ -8,7 +8,7 @@ public class BoardLogic {
 
     private int[] board;
     private boolean AITurn;
-    private MinimaxAgent agent = new MinimaxAgent(this, 5);
+    protected final MinimaxAgent agent = new MinimaxAgent( 10);
 
 
     public BoardLogic() {
@@ -25,12 +25,12 @@ public class BoardLogic {
         AITurn = false;
     }
 
-public boolean makeMove(int pitIndex) {
-    if (!isValidMove(pitIndex)) return false;
+    public boolean makeMove(int pitIndex) {
+        if (!isValidMove(pitIndex)) return false;
 
-    int stones = board[pitIndex];
-    board[pitIndex] = 0;
-    int currentIndex = pitIndex;
+        int stones = board[pitIndex];
+        board[pitIndex] = 0;
+        int currentIndex = pitIndex;
 
         while (stones > 0) {
             currentIndex = (currentIndex + 1) % TOTAL_PITS;
@@ -45,25 +45,46 @@ public boolean makeMove(int pitIndex) {
     switchTurn(currentIndex);
 
     if(AITurn){
-        new Thread(() -> {
+        new Thread(() ->{
+            int bestMove = agent.getBestMove(this);
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
+                makeMove(bestMove);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            makeMove(agent.minimax());
         }).start();
      }
 
-    return true;
-}
-
-
-
-    private boolean isValidMove(int pitIndex) {
-        if (AITurn && (pitIndex >= PITS_PER_SIDE || board[pitIndex] == 0)) return false;
-        if (!AITurn && (pitIndex < PITS_PER_SIDE || pitIndex == AI_STORE || board[pitIndex] == 0)) return false;
         return true;
+    }
+
+    public boolean checkMove(int pitIndex){
+        if (!isValidMove(pitIndex)) return false;
+
+        int stones = board[pitIndex];
+        board[pitIndex] = 0;
+        int currentIndex = pitIndex;
+
+        while (stones > 0) {
+            currentIndex = (currentIndex + 1) % TOTAL_PITS;
+            if ((AITurn && currentIndex == PLAYER_STORE) || (!AITurn && currentIndex == AI_STORE)) {
+                continue;
+            }
+            board[currentIndex]++;
+            stones--;
+        }
+        checkCapture(currentIndex);
+        switchTurn(currentIndex);
+        return true;
+    }
+
+
+
+    public boolean isValidMove(int pitIndex) {
+        if(pitIndex < 0 || pitIndex >= TOTAL_PITS) return false;
+        if (AITurn && (pitIndex >= PITS_PER_SIDE || board[pitIndex] == 0)) return false;
+        return AITurn || (pitIndex >= PITS_PER_SIDE && pitIndex != AI_STORE && board[pitIndex] != 0);
     }
 
     private void checkCapture(int lastPit) {

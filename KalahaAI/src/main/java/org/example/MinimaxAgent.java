@@ -1,38 +1,80 @@
 package org.example;
 
+import java.util.Random;
+
 public class MinimaxAgent {
 
-    private BoardLogic board;
     private int depth;
 
-    public MinimaxAgent(BoardLogic board, int depth){
-        this.board = board;
+    public MinimaxAgent(int depth) {
         this.depth = depth;
     }
 
-    public  int minimax(){
-        BoardLogic tempBoard = board.copy();
-        int[] scoremoves = new int[6];
-        for (int i=0; i<6; i++){
-            scoremoves[i]= evaluate(tempBoard, i);
-            tempBoard=board.copy();
-        }
+
+
+    public int getBestMove(BoardLogic board) {
         int bestMove = -1;
-        for (int i=0; i<6; i++){
-            if (scoremoves[i] > bestMove){
-                bestMove = i;
+        int bestValue = Integer.MIN_VALUE;
+
+        for (int i = 0; i < 6; i++) {
+            if (board.isValidMove(i)) {
+                BoardLogic tempBoard = board.copy();
+                tempBoard.checkMove(i);
+                int moveValue = minimax(tempBoard, depth - 1, false, Integer.MIN_VALUE, Integer.MAX_VALUE);
+                if (moveValue > bestValue) {
+                    bestValue = moveValue;
+                    bestMove = i;
+                }
             }
         }
+
+        // getBestMove sometimes returns -1, so we need to handle that somehow
+        Random random = new Random(556687645);
+        if (bestMove == -1) {
+            bestMove = random.nextInt(5);
+            if(board.getBoard()[bestMove]==0){random.nextInt(5);}
+        }
+
+
         return bestMove;
+
     }
 
-    private int evaluate(BoardLogic board, int move){
-        int AIScore = board.getBoard()[BoardLogic.AI_STORE];
-        board.makeMove(move);
-        if(board.getBoard()[BoardLogic.AI_STORE] > AIScore){
-            return 1;
-        } else{
-            return 0;
+    private int minimax(BoardLogic board, int depth, boolean isMaximizing, int alpha, int beta) {
+        if (depth == 0 || board.isGameOver()) {
+            return evaluateBoard(board);
         }
+
+        if (isMaximizing) {
+            int maxEval = Integer.MIN_VALUE;
+            for (int i = 0; i < 6; i++) {
+                if (board.isValidMove(i)) {
+                    BoardLogic tempBoard = board.copy();
+                    tempBoard.checkMove(i);
+                    int eval = minimax(tempBoard, depth - 1, false, alpha, beta);
+                    maxEval = Math.max(maxEval, eval);
+                    alpha = Math.max(alpha, eval);
+                    if (beta <= alpha) break;
+                }
+            }
+            return maxEval;
+        } else {
+            int minEval = Integer.MAX_VALUE;
+            for (int i = 6 + 1; i < BoardLogic.PLAYER_STORE; i++) {
+                if (board.isValidMove(i)) {
+                    BoardLogic tempBoard = board.copy();
+                    tempBoard.checkMove(i);
+                    int eval = minimax(tempBoard, depth - 1, true, alpha, beta);
+                    minEval = Math.min(minEval, eval);
+                    beta = Math.min(beta, eval);
+                    if (beta <= alpha) break;
+                }
+            }
+            return minEval;
+        }
+    }
+
+    private int evaluateBoard(BoardLogic board) {
+        return board.getBoard()[BoardLogic.AI_STORE] - board.getBoard()[BoardLogic.PLAYER_STORE];
     }
 }
