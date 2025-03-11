@@ -39,7 +39,7 @@ public class BoardUI {
 
         if(boardLogic.isAITurn()){
             DrawText("AI's Turn", SCREEN_WIDTH / 2 - MeasureText("AI's Turn", 20) / 2, 20, 20, BLACK);
-            DrawText("AI chooses pit " + (boardLogic.agent.getBestMove(boardLogic)+1), SCREEN_WIDTH / 2 - MeasureText("AI chooses pit " + boardLogic.agent.getBestMove(boardLogic), 20) / 2, 40, 20, BLACK);
+            DrawText("AI chooses pit " + (boardLogic.bestMove+1), SCREEN_WIDTH / 2 - MeasureText("AI chooses pit " + (boardLogic.bestMove+1), 20) / 2, 40, 20, BLACK);
         } else {
             DrawText("Player's Turn", SCREEN_WIDTH / 2 - MeasureText("Player's Turn", 20) / 2, GetScreenHeight()-40, 20, BLACK);
         }

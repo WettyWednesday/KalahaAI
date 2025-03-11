@@ -8,7 +8,8 @@ public class BoardLogic {
 
     private int[] board;
     private boolean AITurn;
-    protected final MinimaxAgent agent = new MinimaxAgent( 10);
+    protected final MinimaxAgent agent = new MinimaxAgent( 12);
+    protected int bestMove = -1;
 
 
     public BoardLogic() {
@@ -26,7 +27,7 @@ public class BoardLogic {
     }
 
     public boolean makeMove(int pitIndex) {
-        if (!isValidMove(pitIndex)) return false;
+        if (!isValidMove(pitIndex, AITurn)) return false;
 
         int stones = board[pitIndex];
         board[pitIndex] = 0;
@@ -45,8 +46,8 @@ public class BoardLogic {
     switchTurn(currentIndex);
 
     if(AITurn){
+        bestMove = agent.getBestMove(this);
         new Thread(() ->{
-            int bestMove = agent.getBestMove(this);
             try {
                 Thread.sleep(1000);
                 makeMove(bestMove);
@@ -59,8 +60,8 @@ public class BoardLogic {
         return true;
     }
 
-    public boolean checkMove(int pitIndex){
-        if (!isValidMove(pitIndex)) return false;
+    public boolean checkMove(int pitIndex, boolean AITurn){
+        if (!isValidMove(pitIndex, AITurn)) return false;
 
         int stones = board[pitIndex];
         board[pitIndex] = 0;
@@ -81,7 +82,7 @@ public class BoardLogic {
 
 
 
-    public boolean isValidMove(int pitIndex) {
+    public boolean isValidMove(int pitIndex, boolean AITurn) {
         if(pitIndex < 0 || pitIndex >= TOTAL_PITS) return false;
         if (AITurn && (pitIndex >= PITS_PER_SIDE || board[pitIndex] == 0)) return false;
         return AITurn || (pitIndex >= PITS_PER_SIDE && pitIndex != AI_STORE && board[pitIndex] != 0);
@@ -117,7 +118,7 @@ public class BoardLogic {
             if(board[PLAYER_STORE] <= 24) player2StoreOverHalf = false;
         }
         if(aiEmpty){
-            for(int i = 7; i<TOTAL_PITS;i++){
+            for(int i = 7; i<TOTAL_PITS-1;i++){
                 board[PLAYER_STORE] += board[i];
                 board[i] = 0;
             }

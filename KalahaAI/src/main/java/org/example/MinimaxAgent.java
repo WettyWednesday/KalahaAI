@@ -17,9 +17,9 @@ public class MinimaxAgent {
         int bestValue = Integer.MIN_VALUE;
 
         for (int i = 0; i < 6; i++) {
-            if (board.isValidMove(i)) {
+            if (board.isValidMove(i, true)) {
                 BoardLogic tempBoard = board.copy();
-                tempBoard.checkMove(i);
+                tempBoard.checkMove(i, true);
                 int moveValue = minimax(tempBoard, depth - 1, false, Integer.MIN_VALUE, Integer.MAX_VALUE);
                 if (moveValue > bestValue) {
                     bestValue = moveValue;
@@ -28,12 +28,6 @@ public class MinimaxAgent {
             }
         }
 
-        // getBestMove sometimes returns -1, so we need to handle that somehow
-        Random random = new Random(556687645);
-        if (bestMove == -1) {
-            bestMove = random.nextInt(5);
-            if(board.getBoard()[bestMove]==0){random.nextInt(5);}
-        }
 
 
         return bestMove;
@@ -48,9 +42,9 @@ public class MinimaxAgent {
         if (isMaximizing) {
             int maxEval = Integer.MIN_VALUE;
             for (int i = 0; i < 6; i++) {
-                if (board.isValidMove(i)) {
+                if (board.isValidMove(i, true)) {
                     BoardLogic tempBoard = board.copy();
-                    tempBoard.checkMove(i);
+                    tempBoard.checkMove(i, true);
                     int eval = minimax(tempBoard, depth - 1, false, alpha, beta);
                     maxEval = Math.max(maxEval, eval);
                     alpha = Math.max(alpha, eval);
@@ -61,9 +55,9 @@ public class MinimaxAgent {
         } else {
             int minEval = Integer.MAX_VALUE;
             for (int i = 6 + 1; i < BoardLogic.PLAYER_STORE; i++) {
-                if (board.isValidMove(i)) {
+                if (board.isValidMove(i, false)) {
                     BoardLogic tempBoard = board.copy();
-                    tempBoard.checkMove(i);
+                    tempBoard.checkMove(i, false);
                     int eval = minimax(tempBoard, depth - 1, true, alpha, beta);
                     minEval = Math.min(minEval, eval);
                     beta = Math.min(beta, eval);
