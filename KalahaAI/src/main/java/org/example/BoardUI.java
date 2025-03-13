@@ -56,10 +56,19 @@ public class BoardUI {
         for (int i = 0; i < numPits; i++) {
             float x1 = startXtop - i * (spacing + pitRadius * 2);
             float x2 = startXbottom + i * (spacing + pitRadius * 2);
+
+            int mouseX = GetMouseX();
+            int mouseY = GetMouseY();
+
+            boolean isHoveringBottom = (mouseX > x2 - pitRadius && mouseX < x2 + pitRadius &&
+                    mouseY > bottomRowY - pitRadius && mouseY < bottomRowY + pitRadius);
+
+            Color hoverColor = isHoveringBottom ? new Color().r((byte) 0).g((byte) 168).b((byte) 39).a((byte) 255) : GREEN;
+
             DrawCircle((int) x1, (int) topRowY, pitRadius, RED);
             DrawText(String.valueOf(boardState[i]), (int) x1 - 5, (int) topRowY - 5, 20, WHITE);
 
-            DrawCircle((int) x2, (int) bottomRowY, pitRadius, GREEN);
+            DrawCircle((int) x2, (int) bottomRowY, pitRadius, hoverColor);
             DrawText(String.valueOf(boardState[i + numPits + 1]), (int) x2 - 5, (int) bottomRowY - 5, 20, WHITE);
         }
 
