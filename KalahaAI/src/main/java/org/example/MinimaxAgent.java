@@ -68,7 +68,34 @@ public class MinimaxAgent {
         }
     }
 
-    private int evaluateBoard(BoardLogic board) {
-        return board.getBoard()[BoardLogic.AI_STORE] - board.getBoard()[BoardLogic.PLAYER_STORE];
+private int evaluateBoard(BoardLogic board) {
+    int[] boardState = board.getBoard();
+    int aiScore = boardState[BoardLogic.AI_STORE];
+    int playerScore = boardState[BoardLogic.PLAYER_STORE];
+
+    int aiStones = 0;
+    int playerStones = 0;
+    int aiEmptyPits = 0;
+    int playerEmptyPits = 0;
+
+    for (int i = 0; i < BoardLogic.PITS_PER_SIDE; i++) {
+        aiStones += boardState[i];
+        if (boardState[i] == 0) {
+            aiEmptyPits++;
+        }
     }
+
+    for (int i = BoardLogic.PITS_PER_SIDE + 1; i < BoardLogic.PLAYER_STORE; i++) {
+        playerStones += boardState[i];
+        if (boardState[i] == 0) {
+            playerEmptyPits++;
+        }
+    }
+
+    int score = (aiScore - playerScore) * 10; // Weight the store difference more heavily
+    score += (aiStones - playerStones); // Add the difference in stones on the board
+    score -= (aiEmptyPits - playerEmptyPits) * 2; // Penalize empty pits
+
+    return score;
+}
 }

@@ -1,7 +1,7 @@
 package org.example;
 
 public class BoardLogic {
-    private static final int PITS_PER_SIDE = 6;
+    protected static final int PITS_PER_SIDE = 6;
     private static final int TOTAL_PITS = PITS_PER_SIDE * 2 + 2;
     public static final int AI_STORE = PITS_PER_SIDE;
     public static final int PLAYER_STORE = TOTAL_PITS - 1;
@@ -91,11 +91,13 @@ public class BoardLogic {
     private void checkCapture(int lastPit) {
         if (AITurn && lastPit < AI_STORE && board[lastPit] == 1) {
             int oppositePit = TOTAL_PITS - 2 - lastPit;
+            if(board[oppositePit] == 0) return;
             board[AI_STORE] += board[oppositePit] + 1;
             board[oppositePit] = 0;
             board[lastPit] = 0;
         } else if (!AITurn && lastPit > AI_STORE && lastPit < PLAYER_STORE && board[lastPit] == 1) {
             int oppositePit = TOTAL_PITS - 2 - lastPit;
+            if(board[oppositePit] == 0) return;
             board[PLAYER_STORE] += board[oppositePit] + 1;
             board[oppositePit] = 0;
             board[lastPit] = 0;
